@@ -2,7 +2,7 @@ from cv2 import cv2
 import face_recognition
 
 # FOR LOADING IMAGE FILE FROM "ASSETS" FOLDER
-imgJohnny = face_recognition.load_image_file('assets/Johnny-Depp.jpg')
+imgJohnny = face_recognition.load_image_file('assets/johnny-depp.jpg')
 
 # ABOVE IMAGE WAS IN BGR COLOR FORMAT
 # CONVERTING IT TO RGB COLOR FORMAT
@@ -15,11 +15,12 @@ johnnyLocation = face_recognition.face_locations(imgJohnny)[0]
 johnnyEncode = face_recognition.face_encodings(imgJohnny)[0]
 
 # REPEATING THE SAME STEP FOR A TEST IMAGE
-imgJohnnytest = face_recognition.load_image_file('assets/johnydepp-test.jpg')
+imgJohnnytest = face_recognition.load_image_file('assets/hardik.jpg')
 imgJohnnytest = cv2.cvtColor(imgJohnnytest, cv2.COLOR_BGR2RGB)
 johnnytestLocation = face_recognition.face_locations(imgJohnnytest)[0]
 johnnytestEncode = face_recognition.face_encodings(imgJohnnytest)[0]
 
+# COMPARING BOTH FACES AND PRINTING THE RESULT
 result = face_recognition.compare_faces([johnnyEncode],johnnytestEncode)
 print(result)
 
