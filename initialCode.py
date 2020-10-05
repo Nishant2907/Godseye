@@ -25,17 +25,14 @@ imgJohnnytest = face_recognition.load_image_file('assets/johnny-depp-test.jpg')
 imgJohnnytest = cv2.cvtColor(imgJohnnytest, cv2.COLOR_BGR2RGB)
 johnnytestLocation = face_recognition.face_locations(imgJohnnytest)[0]
 johnnytestEncode = face_recognition.face_encodings(imgJohnnytest)[0]
+cv2.rectangle(imgJohnnytest, (johnnytestLocation[3], johnnytestLocation[0]), (johnnytestLocation[1], johnnytestLocation[2]), (0, 255, 0), 2)
+cv2.putText(imgJohnny, "Johnny Depp Test", (100, 100), cv2.FONT_HERSHEY_SIMPLEX, 1.0, (0, 255, 0), 2)
 
 # COMPARING BOTH FACES AND PRINTING THE RESULT
 result = face_recognition.compare_faces([johnnyEncode],johnnytestEncode)
 print(result)
 
-cv2.rectangle(imgJohnnytest, (johnnytestLocation[3], johnnytestLocation[0]), (johnnytestLocation[1], johnnytestLocation[2]), (0, 255, 0), 2)
-cv2.putText(imgJohnny, "Johnny Depp Test", (100, 100), cv2.FONT_HERSHEY_SIMPLEX, 1.0, (0, 255, 0), 2)
-
 # SHOWING THE FINAL IMAGE WITH GREEN RECTANGLE
 cv2.imshow('Johnny Depp', imgJohnny)
 cv2.imshow('Johnny Depp Test', imgJohnnytest)
 cv2.waitKey(0)
-
-
