@@ -1,14 +1,12 @@
-# THIS IS A BACKUP VIDEO CODE
+# TESTING BACKUP VIDEO CODE WITHOUT USING NUMPY LIBRARY
 
 import face_recognition
 from cv2 import cv2
-import numpy as np
-
 
 video_capture = cv2.VideoCapture(0)
 
 # training an image
-ankit_image = face_recognition.load_image_file("assets/nishant.jpg")
+ankit_image = face_recognition.load_image_file("assets/hardik.jpg")
 ankit_face_encoding = face_recognition.face_encodings(ankit_image)[0]
 
   
@@ -47,12 +45,16 @@ while True:
         for face_encoding in face_encodings:
             # See if the face is a match for the known face(s)
             matches = face_recognition.compare_faces(known_face_encodings, face_encoding)
-            name = "Unknown"
+            
+            if(matches[0]):
+                name = known_face_names[0]
+            else:
+                name = "unknown"
 
-            face_distances = face_recognition.face_distance(known_face_encodings, face_encoding)
-            best_match_index = np.argmin(face_distances)
-            if matches[best_match_index]:
-                name = known_face_names[best_match_index]
+            #face_distances = face_recognition.face_distance(known_face_encodings, face_encoding)
+            #best_match_index = np.argmin(face_distances)
+            #if matches[best_match_index]:
+            #    name = known_face_names[best_match_index]
 
             face_names.append(name)
 
