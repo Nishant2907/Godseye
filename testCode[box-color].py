@@ -1,3 +1,7 @@
+# THIS CODE CHANGES THE COLOR OF THE RECTAGLE AROUND THE FACE
+# RED IF FACES DOESN'T MATCH
+# GREEN IF THE FCES MATCH
+
 from cv2 import cv2
 import face_recognition
 
@@ -9,6 +13,7 @@ imgJohnny = face_recognition.load_image_file('assets/johnny-depp.jpg')
 imgJohnny= cv2.cvtColor(imgJohnny, cv2.COLOR_BGR2RGB)
 
 # FINDING THE FACE IN THE IMAGE
+# THIS GIVES US THE LOCATION OF FACE IN FORMAT --> TOP - RIGHT - BOTTOM - LEFT
 johnnyLocation = face_recognition.face_locations(imgJohnny)[0]
 
 # GETTING 128 MEASUREMENTS OF THE FACE

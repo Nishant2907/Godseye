@@ -1,3 +1,5 @@
+# THIS IS THE FIRST ATTEMPT TO DETECT FACE IN AN IMAGE
+
 from cv2 import cv2
 import face_recognition
 
@@ -9,12 +11,14 @@ imgJohnny = face_recognition.load_image_file('assets/johnny-depp.jpg')
 imgJohnny = cv2.cvtColor(imgJohnny, cv2.COLOR_BGR2RGB)
 
 # FINDING THE FACE IN THE IMAGE
+# THIS GIVES US THE LOCATION OF FACE IN FORMAT --> TOP - RIGHT - BOTTOM - LEFT
 johnnyLocation = face_recognition.face_locations(imgJohnny)[0]
 
 # GETTING 128 MEASUREMENTS OF THE FACE
 johnnyEncode = face_recognition.face_encodings(imgJohnny)[0]
 
 # ADDING A GREEN COLOR RECTANGLE AROUND THE FACE
+# HERE WE NEED TO PROVIDE FACE LOCATION IN FORMAT --> LEFT - TOP - RIGHT - BOTTOM
 cv2.rectangle(imgJohnny, (johnnyLocation[3], johnnyLocation[0]), (johnnyLocation[1], johnnyLocation[2]), (0, 255, 0), 2)
 
 # ADDING A NAME INSIDE THE IMAGE

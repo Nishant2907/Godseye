@@ -1,3 +1,6 @@
+# THIS IS A SHORTENED CODE
+# WE ARE ALSO CHECKING THE TIME TAKEN BY THE CODE IF IMAGE IS NOT SHOWN
+
 from cv2 import cv2
 import face_recognition
 import os
