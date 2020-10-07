@@ -10,7 +10,7 @@ johnnyLocation = face_recognition.face_locations(imgJohnny)[0]
 johnnyEncode = face_recognition.face_encodings(imgJohnny)[0]
 
 # 2ND IMAGE
-imgJohnnytest = face_recognition.load_image_file('assets/johnny-depp-and-robert.jpg')
+imgJohnnytest = face_recognition.load_image_file('testAssets/johnny-depp-and-robert.jpg')
 imgJohnnytest = cv2.cvtColor(imgJohnnytest, cv2.COLOR_BGR2RGB)
 
 faces = face_recognition.face_locations(imgJohnnytest)
