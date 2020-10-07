@@ -19,7 +19,7 @@ def returnImageDetails(imagePath):
 
 imagePath = os.listdir('assets')
 testImageDetails = returnImageDetails('testAssets/johnny-depp.jpg')
-for i in range(4):
+for i in range(len(imagePath)):
     imageDetails = returnImageDetails('assets/' + imagePath[i])
     result = []
     result = face_recognition.compare_faces([imageDetails[1]], testImageDetails[1])
