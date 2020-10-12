@@ -1,4 +1,4 @@
-# THIS IS A BACKUP VIDEO CODE
+# THIS IS A FINAL VIDEO CODE
 
 import face_recognition
 from cv2 import cv2
@@ -6,6 +6,7 @@ import numpy as np
 import math
 import os
 
+# FOR CHECKING THE ACCURACY
 def face_distance_to_conf(face_distance, face_match_threshold=0.4718):
     if face_distance > face_match_threshold:
         range = (1.0 - face_match_threshold)
@@ -18,14 +19,11 @@ def face_distance_to_conf(face_distance, face_match_threshold=0.4718):
 
 video_capture = cv2.VideoCapture(0)
 
-# training an image
 ankit_image = face_recognition.load_image_file("assets/nishant_cropped.jpg")
 ankit_face_encoding = face_recognition.face_encodings(ankit_image)[0]
 
   
-# image encodings
 known_face_encodings = []
-
 known_face_names = []
 
 allName = []
@@ -42,20 +40,6 @@ known_face_encodings = allEncode
 print(known_face_names)
 print(temp)
 
-
-
-#allPath = os.listdir("testAssets")
-#print(allPath)
-#for i in range(len(allPath)):
- #   known_face_names.append(allPath[i].split(".")[0])
-  #  img = face_recognition.load_image_file("testAssets/" + allPath[i])
-   # known_face_names_new = known_face_names
-    #known_face_names_new[i] = face_recognition.face_encodings(img)
-    #known_face_encodings.append(face_recognition.face_encodings(img))
-    #known_face_encodings.append(known_face_names_new)
-    #print(known_face_names[i])
-
-#print(known_face_names)
 
 face_locations = []
 face_encodings = []

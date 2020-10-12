@@ -15,10 +15,13 @@ hardik_image = face_recognition.load_image_file("assets/hardik.jpg")
 hardik_face_encoding = face_recognition.face_encodings(hardik_image)[0]
   
 # image encodings
+
 known_face_encodings = [
-    ankit_face_encoding, hardik_face_encoding
+    #ankit_face_encoding, hardik_face_encoding
 
 ]
+known_face_encodings.append(ankit_face_encoding)
+known_face_encodings.append(hardik_face_encoding)
 
 known_face_names = [
     "Nishant Mishra","hardik"
