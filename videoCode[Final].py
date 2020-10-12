@@ -3,7 +3,18 @@
 import face_recognition
 from cv2 import cv2
 import numpy as np
+import math
+import os
 
+def face_distance_to_conf(face_distance, face_match_threshold=0.4718):
+    if face_distance > face_match_threshold:
+        range = (1.0 - face_match_threshold)
+        linear_val = (1.0 - face_distance) / (range * 2.0)
+        return linear_val
+    else:
+        range = face_match_threshold
+        linear_val = 1.0 - (face_distance / (range * 2.0))
+        return linear_val + ((1.0 - linear_val) * math.pow((linear_val - 0.5) * 2, 0.2))
 
 video_capture = cv2.VideoCapture(0)
 
@@ -11,18 +22,40 @@ video_capture = cv2.VideoCapture(0)
 ankit_image = face_recognition.load_image_file("assets/nishant_cropped.jpg")
 ankit_face_encoding = face_recognition.face_encodings(ankit_image)[0]
 
-hardik_image = face_recognition.load_image_file("assets/hardik.jpg")
-hardik_face_encoding = face_recognition.face_encodings(hardik_image)[0]
   
 # image encodings
-known_face_encodings = [
-    ankit_face_encoding, hardik_face_encoding
+known_face_encodings = []
 
-]
+known_face_names = []
 
-known_face_names = [
-    "Nishant Mishra","hardik"
-]
+allName = []
+allEncode = []
+allPath = os.listdir("testAssets")
+for i in range(len(allPath)):
+    allName.append(allPath[i].split(".")[0])
+    temp = allName
+    img = face_recognition.load_image_file("testAssets/" + allPath[i])
+    allEncode.append(face_recognition.face_encodings(img))
+
+known_face_names = allName
+known_face_encodings = allEncode
+print(known_face_names)
+print(temp)
+
+
+
+#allPath = os.listdir("testAssets")
+#print(allPath)
+#for i in range(len(allPath)):
+ #   known_face_names.append(allPath[i].split(".")[0])
+  #  img = face_recognition.load_image_file("testAssets/" + allPath[i])
+   # known_face_names_new = known_face_names
+    #known_face_names_new[i] = face_recognition.face_encodings(img)
+    #known_face_encodings.append(face_recognition.face_encodings(img))
+    #known_face_encodings.append(known_face_names_new)
+    #print(known_face_names[i])
+
+#print(known_face_names)
 
 face_locations = []
 face_encodings = []
@@ -53,6 +86,10 @@ while True:
 
             face_distances = face_recognition.face_distance(known_face_encodings, face_encoding)
             best_match_index = np.argmin(face_distances)
+            
+            #to check the accuracy of the face recognized
+            print((face_distance_to_conf(face_distances))*100)
+            
             if matches[best_match_index]:
                 name = known_face_names[best_match_index]
 
@@ -60,6 +97,7 @@ while True:
 
     process_this_frame = not process_this_frame
     
+
 
     # Display the results
     for (top, right, bottom, left), name in zip(face_locations, face_names):

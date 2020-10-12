@@ -13,7 +13,7 @@ for i in range(len(allPath)):
     img = face_recognition.load_image_file("testAssets/" + allPath[i])
     allEncode.append(face_recognition.face_encodings(img))
 
-
+print(allName)
 vid = cv2.VideoCapture()
 
 while True:
