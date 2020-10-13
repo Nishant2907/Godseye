@@ -1,4 +1,4 @@
-# THIS IS A BACKUP VIDEO CODE
+# INITIAL BACKUP CODE
 
 import face_recognition
 from cv2 import cv2
@@ -8,23 +8,20 @@ import numpy as np
 video_capture = cv2.VideoCapture(0)
 
 # training an image
-ankit_image = face_recognition.load_image_file("assets/nishant_cropped.jpg")
-ankit_face_encoding = face_recognition.face_encodings(ankit_image)[0]
-
 hardik_image = face_recognition.load_image_file("assets/hardik.jpg")
 hardik_face_encoding = face_recognition.face_encodings(hardik_image)[0]
-  
-# image encodings
 
+nishant_image = face_recognition.load_image_file("assets/nishant.jpg")
+nishant_face_encoding = face_recognition.face_encodings(nishant_image)[0]
+
+# image encodings
 known_face_encodings = [
-    #ankit_face_encoding, hardik_face_encoding
+    hardik_face_encoding, nishant_face_encoding
 
 ]
-known_face_encodings.append(ankit_face_encoding)
-known_face_encodings.append(hardik_face_encoding)
 
 known_face_names = [
-    "Nishant Mishra","hardik"
+    "Hardik Kumar", "Nishant Mishra"
 ]
 
 face_locations = []
@@ -62,7 +59,7 @@ while True:
             face_names.append(name)
 
     process_this_frame = not process_this_frame
-    
+
 
     # Display the results
     for (top, right, bottom, left), name in zip(face_locations, face_names):
@@ -73,18 +70,19 @@ while True:
         left *= 4
 
         # Draw a box around the face
-        cv2.rectangle(frame, (left, top), (right, bottom), (0, 255, 0), 2)
+        cv2.rectangle(frame, (left, top), (right, bottom), (0, 0, 255), 2)
 
         # Draw a label with a name below the face
-        cv2.rectangle(frame, (left, bottom - 35), (right, bottom), (0, 255, 0), cv2.FILLED)
-        font = cv2.FONT_ITALIC
-        cv2.putText(frame, name, (left + 6, bottom - 6), font, 1.0, (0, 0, 0), 2)
+        cv2.rectangle(frame, (left, bottom - 35), (right, bottom), (0, 0, 255), cv2.FILLED)
+        font = cv2.FONT_HERSHEY_DUPLEX
+        cv2.putText(frame, name, (left + 6, bottom - 6), font, 1.0, (255, 255, 255), 1)
 
     # Display the resulting image
     cv2.imshow('Video', frame)
 
     if cv2.waitKey(1) & 0xFF == ord('q'):
         break
+
 # Release handle to the webcam
 video_capture.release()
 cv2.destroyAllWindows()
