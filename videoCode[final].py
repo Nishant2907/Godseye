@@ -9,7 +9,7 @@ import numpy
 vid = cv2.VideoCapture(0)
 
 # FOR CHECKING THE ACCURACY
-def accuracy(face_distance, face_match_threshold=0.4718):
+def accuracy(face_distance, face_match_threshold = 0.6):
     if face_distance > face_match_threshold:
         range = (1.0 - face_match_threshold)
         linear_val = (1.0 - face_distance) / (range * 2.0)
@@ -31,59 +31,47 @@ for i in range(len(allPath)):
     temp = face_recognition.face_encodings(img)[0]
     allEncode.append(temp)
 
-#for i in range(len(allPath)):
-#    for encode in allName:
-#        temp = encode
-#        img = face_recognition.load_image_file("testAssets/" + allPath[i])
-#        temp = face_recognition.face_encodings(img)
-#        allEncode.append(temp)
-
-#nishant = face_recognition.load_image_file("assets/nishant_cropped.jpg")
-#nishant = face_recognition.face_encodings(nishant)[0]
-
-#hardik = face_recognition.load_image_file("assets/hardik.jpg")
-#hardik = face_recognition.face_encodings(hardik)[0]
-
-#allName = ["nishant", "hardik"]
-#allEncode = [nishant, hardik]
-
 while True:
     ret, frame = vid.read()
 
     resizeFrame = cv2.resize(frame, (0, 0), fx=0.2, fy=0.2)
 
-    checkFrame = resizeFrame[:, :, ::-1]
+    checkFrame = cv2.cvtColor(resizeFrame, cv2.COLOR_BGR2RGB)
 
     faceLocation = face_recognition.face_locations(checkFrame)
 
     faceEncode = face_recognition.face_encodings(checkFrame, faceLocation)
 
-        #for i in range(len(allPath)):
-        #    result = face_recognition.compare_faces([allEncode[i]], frame)
-        #    if(result[0]):g
-        #        cv2.rectangle(frame, (100, 100), (100, 100), (0, 255, 0), 2)
-        #    else:
-        #        cv2.rectangle(frame, (100, 100), (100, 100), (0, 0, 255), 2)
-
+    faceNames = []
     for i in faceEncode:
-        match = face_recognition.compare_faces(allEncode, i)
 
+        match = face_recognition.compare_faces(allEncode, i)
         name = "Unknown"
 
         faceDistance = face_recognition.face_distance(allEncode, i)
+
+        if faceDistance[0] > faceDistance[1]: minValue = faceDistance[1]
+        else: minValue = faceDistance[0]
+
+        accurate = accuracy(minValue)*100
+        print(accurate)
+
         bestMatchIndex = numpy.argmin(faceDistance)
 
-        if match[bestMatchIndex]:
+        if match[bestMatchIndex] and accurate>80:
             name = allName[bestMatchIndex]
-            #print(accuracy(faceDistance) * 100)
-            #cv2.rectangle(frame, (faceLocation[2], faceLocation[0]), (faceLocation[1], faceLocation[2]), (0, 255, 0), 2)
-            
+         
+        faceNames.append(name)
         print(name)
+        
+    for (top, right, bottom, left), name in zip(faceLocation, faceNames):
+        top *= 5
+        right *= 5
+        bottom *= 5
+        left *= 5
 
-    #cv2.rectangle(frame, (faceLocation[3], faceLocation[0]), (faceLocation[1], faceLocation[2]), (0, 255, 0), 2)
+        cv2.rectangle(frame, (left, top), (right, bottom), (0, 255, 0), 2)
+        cv2.putText(frame, name, (left + 6, bottom - 6), cv2.FONT_HERSHEY_DUPLEX, 1.0, (0, 255, 0), 2)
+
     cv2.imshow('Recording video', frame)
     cv2.waitKey(1)
-    #if cv2.waitKey(1) & 0xFF == ord('q'):
-    #    break
-
-
