@@ -5,8 +5,22 @@ import face_recognition
 import os
 import math
 import numpy
+from datetime import datetime
 
 vid = cv2.VideoCapture(0)
+
+# FOR MARKING ATTENDANCE
+def markAttendance(regNo, name):
+    f = open("Attendance.csv", "r+")
+    data = f.readlines()
+    regList = []
+    for line in data:
+        entry = line.split(',')
+        regList.append(entry[0])
+    if regNo not in regList:
+        time = datetime.now()
+        dtstring = time.strftime('%H:%M:%S')
+        f.writelines(f'\n{regNo},{name},{dtstring}')
 
 # FOR CHECKING THE ACCURACY
 def accuracy(face_distance, face_match_threshold = 0.6):
@@ -60,6 +74,8 @@ while True:
 
         if match[bestMatchIndex] and accurate>80:
             name = allName[bestMatchIndex]
+            #markAttendance(name)
+            markAttendance(allReg[bestMatchIndex], name)
          
         faceNames.append(name)
         print(name)
