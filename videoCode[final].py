@@ -7,7 +7,7 @@ import math
 import numpy
 from datetime import datetime
 
-vid = cv2.VideoCapture(0)
+videoCapture = cv2.VideoCapture(0)
 
 # FOR MARKING ATTENDANCE
 def markAttendance(regNo, name):
@@ -23,71 +23,64 @@ def markAttendance(regNo, name):
         f.writelines(f'\n{regNo},{name},{dtstring}')
 
 # FOR CHECKING THE ACCURACY
-def accuracy(face_distance, face_match_threshold = 0.6):
-    if face_distance > face_match_threshold:
-        range = (1.0 - face_match_threshold)
-        linear_val = (1.0 - face_distance) / (range * 2.0)
-        return linear_val
+def getAccuracy(faceDistance, faceMatchThreshold = 0.6):
+    if faceDistance > faceMatchThreshold:
+        range = (1.0 - faceMatchThreshold)
+        linearValue = (1.0 - faceDistance) / (range * 2.0)
+        return linearValue
     else:
-        range = face_match_threshold
-        linear_val = 1.0 - (face_distance / (range * 2.0))
-        return linear_val + ((1.0 - linear_val) * math.pow((linear_val - 0.5) * 2, 0.2))
+        range = faceMatchThreshold
+        linearValue = 1.0 - (faceDistance / (range * 2.0))
+        return linearValue + ((1.0 - linearValue) * math.pow((linearValue - 0.5) * 2, 0.2))
 
-# NAME AND PATH OF EACH PERSON
-allPath = os.listdir("videoTestAssets")
-allName = []
-allReg = []
-allEncode = []
-for i in range(len(allPath)):
-    allName.append(allPath[i].split(".")[0])
-    allReg.append(allPath[i].split(".")[1])
-    img = face_recognition.load_image_file("videoTestAssets/" + allPath[i])
+# FOR GETTING PATH, NAME, REGISTRATION NO. AND ENCODINGS OF EACH PERSON
+allPaths = os.listdir("videoTestAssets")
+allNames = []
+allRegNumbers = []
+allEncodings = []
+for i in range(len(allPaths)):
+    allNames.append(allPaths[i].split(".")[0])
+    allRegNumbers.append(allPaths[i].split(".")[1])
+    img = face_recognition.load_image_file("videoTestAssets/" + allPaths[i])
     temp = face_recognition.face_encodings(img)[0]
-    allEncode.append(temp)
+    allEncodings.append(temp)
 
 while True:
-    ret, frame = vid.read()
+    ret, frame = videoCapture.read()
 
-    resizeFrame = cv2.resize(frame, (0, 0), fx=0.2, fy=0.2)
+    resizedFrame = cv2.resize(frame, (0, 0), fx=0.2, fy=0.2)
 
-    checkFrame = cv2.cvtColor(resizeFrame, cv2.COLOR_BGR2RGB)
+    requiredFrame = cv2.cvtColor(resizedFrame, cv2.COLOR_BGR2RGB)
 
-    faceLocation = face_recognition.face_locations(checkFrame)
+    faceLocation = face_recognition.face_locations(requiredFrame)
 
-    faceEncode = face_recognition.face_encodings(checkFrame, faceLocation)
+    faceEncoding = face_recognition.face_encodings(requiredFrame, faceLocation)
 
-    faceNames = []
-    for i in faceEncode:
+    for encoding in faceEncoding:
 
-        match = face_recognition.compare_faces(allEncode, i)
-        name = "Unknown"
+        ismatched = face_recognition.compare_faces(allEncodings, encoding)
+        matchedName = "Unknown"
 
-        faceDistance = face_recognition.face_distance(allEncode, i)
+        faceDistance = face_recognition.face_distance(allEncodings, encoding)
 
-        if faceDistance[0] > faceDistance[1]: minValue = faceDistance[1]
-        else: minValue = faceDistance[0]
+        if faceDistance[0] > faceDistance[1]: minimumFaceDistance = faceDistance[1]
+        else: minimumFaceDistance = faceDistance[0]
 
-        accurate = accuracy(minValue)*100
-        print(accurate)
+        accuracy = getAccuracy(minimumFaceDistance)*100
+        print(accuracy)
 
         bestMatchIndex = numpy.argmin(faceDistance)
 
-        if match[bestMatchIndex] and accurate>80:
-            name = allName[bestMatchIndex]
-            #markAttendance(name)
-            markAttendance(allReg[bestMatchIndex], name)
+        if ismatched[bestMatchIndex] and accuracy > 82:
+            matchedName = allNames[bestMatchIndex]
+            markAttendance(allRegNumbers[bestMatchIndex], matchedName)
          
-        faceNames.append(name)
-        print(name)
-        
-    for (top, right, bottom, left), name in zip(faceLocation, faceNames):
-        top *= 5
-        right *= 5
-        bottom *= 5
-        left *= 5
+        print(matchedName)
 
-        cv2.rectangle(frame, (left, top), (right, bottom), (0, 255, 0), 2)
-        cv2.putText(frame, name, (left + 6, bottom - 6), cv2.FONT_HERSHEY_DUPLEX, 1.0, (0, 255, 0), 2)
+        faceCoordinates = list(i*5 for i in faceLocation[0])
 
-    cv2.imshow('Recording video', frame)
+        cv2.rectangle(frame, (faceCoordinates[3], faceCoordinates[0]), (faceCoordinates[1], faceCoordinates[2]), (0, 255, 0), 2)
+        cv2.putText(frame, matchedName, (faceCoordinates[3] + 6, faceCoordinates[2] - 6), cv2.FONT_HERSHEY_DUPLEX, 1.0, (0, 255, 0), 2)
+
+    cv2.imshow("Recording video", frame)
     cv2.waitKey(1)
