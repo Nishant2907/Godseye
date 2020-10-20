@@ -71,16 +71,17 @@ while True:
 
         bestMatchIndex = numpy.argmin(faceDistance)
 
+        faceCoordinates = list(i*5 for i in faceLocation[0])
+
         if ismatched[bestMatchIndex] and accuracy > 82:
             matchedName = allNames[bestMatchIndex]
             markAttendance(allRegNumbers[bestMatchIndex], matchedName)
-         
+            cv2.putText(frame, "%.2f"%accuracy + "%", (faceCoordinates[3] + 6, faceCoordinates[2]+ 25), cv2.FONT_HERSHEY_DUPLEX, 1.0, (0, 255, 0), 2)
+        
         print(matchedName)
-
-        faceCoordinates = list(i*5 for i in faceLocation[0])
 
         cv2.rectangle(frame, (faceCoordinates[3], faceCoordinates[0]), (faceCoordinates[1], faceCoordinates[2]), (0, 255, 0), 2)
         cv2.putText(frame, matchedName, (faceCoordinates[3] + 6, faceCoordinates[2] - 6), cv2.FONT_HERSHEY_DUPLEX, 1.0, (0, 255, 0), 2)
-
+        
     cv2.imshow("Recording video", frame)
     cv2.waitKey(1)
